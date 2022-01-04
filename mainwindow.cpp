@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     initModelName();
     connect(ui->setButton, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
     setWindowTitle(tr("Wacom settings"));
-
 }
 
 MainWindow::~MainWindow()
@@ -38,8 +37,7 @@ void MainWindow::setArea(QList<int> values)
     for (int item : values) {
         command += QString::number(item) + " ";
     }
-    const char *exCommand = command.toLocal8Bit().data();
-    qDebug() << command;
+    const char *exCommand = (const char *)(command.toUtf8());
     system(exCommand);
 }
 
@@ -69,7 +67,6 @@ QStringList MainWindow::findDevices()
 void MainWindow::initModelName()
 {
     QStringList devices = findDevices();
-    QString modelName;
     for (const QString &device : devices) {
         if (device.contains("type: STYLUS")) {
             this->modelName = parseModelName(device);
