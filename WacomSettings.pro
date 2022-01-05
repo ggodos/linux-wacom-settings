@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     areapreview.cpp \
+    cliinteractor.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     areapreview.h \
+    cliinteractor.h \
     mainwindow.h
 
 FORMS += \

@@ -1,7 +1,6 @@
 #include "areapreview.h"
 #include "qpainter.h"
 #include "qdebug.h"
-#include <QFloat16>
 
 AreaPreview::AreaPreview(QWidget *parent)
     : QWidget{parent}
