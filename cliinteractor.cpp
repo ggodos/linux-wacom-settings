@@ -9,13 +9,13 @@ CLIInteractor::CLIInteractor()
 QString CLIInteractor::getField(QString field)
 {
     QStringList args = QStringList() << "--get" << commandModelName << field;
-    return executeCommand(args, QIODevice::ReadOnly);
+    QString out = executeCommand(args, QIODevice::ReadOnly);
+    return out;
 }
 
 void CLIInteractor::setField(QString field, QString newValue)
 {
-    QStringList args = QStringList() << "--set" << commandModelName << " " << field << " " << newValue;
-    QString setCommand = command + " --set " + commandModelName + " " + field + " " + newValue;
+    QString setCommand = command + " --set \"" + commandModelName + "\" " + field + " " + newValue;
     system((const char *)(setCommand.toUtf8()));
 }
 
@@ -25,7 +25,7 @@ void CLIInteractor::initModelName()
     for (const QString &device : devices) {
         if (device.contains("type: STYLUS")) {
             modelName = parseModelName(device);
-            commandModelName = "\"" + modelName + " Pen stylus\"";
+            commandModelName = "" + modelName + " Pen stylus";
             break;
         }
     }
@@ -59,6 +59,5 @@ QString CLIInteractor::executeCommand(QStringList args, QIODeviceBase::OpenMode 
     process.start(command,args,mode);
     process.waitForFinished();
     QString out = process.readAllStandardOutput();
-    process.terminate();
     return out;
 }

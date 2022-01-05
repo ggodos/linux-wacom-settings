@@ -11,7 +11,7 @@ public:
     explicit AreaPreview(QWidget *parent = nullptr);
     void changeArea(int left, int top, int right, int down);
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 public slots:
 private:
     QRect currentArea;
@@ -20,7 +20,6 @@ private:
     const float max_top = 0;
     const float max_right = 15200;
     const float max_down = 9500;
-
 };
 
 #endif // AREAPREVIEW_H

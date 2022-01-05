@@ -7,7 +7,6 @@ AreaPreview::AreaPreview(QWidget *parent)
 {
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
-    update();
 }
 
 void AreaPreview::paintEvent(QPaintEvent *)

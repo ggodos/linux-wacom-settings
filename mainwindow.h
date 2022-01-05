@@ -21,6 +21,8 @@ public:
 
 public slots:
     void onButtonClicked();
+protected:
+    void showEvent(QShowEvent* event) override;
 private:
     Ui::MainWindow *ui;
     AreaPreview *areaPreview;
@@ -29,5 +31,7 @@ private:
     void setArea(QList<int> values);
     int extractInteger(QLineEdit *line);
     void initModelName();
+    void loadCurrentArea();
+    void setWidgets(QList<int> values);
 };
 #endif // MAINWINDOW_H
