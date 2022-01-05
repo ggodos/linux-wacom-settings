@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "areapreview.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -9,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     initModelName();
+    areaPreview = new AreaPreview;
+    ui->drawingArea->addWidget(areaPreview);
+
     connect(ui->setButton, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
     setWindowTitle(tr("Wacom settings"));
 }
@@ -23,6 +25,7 @@ void MainWindow::onButtonClicked()
     QList<QLineEdit *> lines = { ui->line1_3, ui->line2_3, ui->line3, ui->line4 };
     QList<int> values = takeTextsFromWidgets(lines);
     setArea(values);
+    areaPreview->changeArea(values[0], values[1], values[2], values[3]);
 }
 
 int MainWindow::extractInteger(QLineEdit *line)

@@ -4,6 +4,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "areapreview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,11 +23,12 @@ public slots:
     void onButtonClicked();
 private:
     Ui::MainWindow *ui;
-    int extractInteger(QLineEdit *line);
-    void setArea(QList<int> values);
+    AreaPreview *areaPreview;
     QList<int> takeTextsFromWidgets(QList<QLineEdit *> lines);
     QStringList findDevices();
-    void initModelName();
     QString parseModelName(QString device);
+    void initModelName();
+    void setArea(QList<int> values);
+    int extractInteger(QLineEdit *line);
 };
 #endif // MAINWINDOW_H
