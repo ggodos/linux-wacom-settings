@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "areapreview.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,10 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    areaPreview = new AreaPreview;
+    ui->drawingArea->addWidget(areaPreview);
+
     initModelName();
     connect(ui->setButton, &QPushButton::clicked, this, &MainWindow::onButtonClicked);
     setWindowTitle(tr("Wacom settings"));
-
 }
 
 MainWindow::~MainWindow()
@@ -24,23 +25,19 @@ void MainWindow::onButtonClicked()
     QList<QLineEdit *> lines = { ui->line1_3, ui->line2_3, ui->line3, ui->line4 };
     QList<int> values = takeTextsFromWidgets(lines);
     setArea(values);
-}
-
-int MainWindow::extractInteger(QLineEdit *line)
-{
-    return line->text().toInt();
+    areaPreview->changeArea(values[0], values[1], values[2], values[3]);
 }
 
 void MainWindow::setArea(QList<int> values)
 {
-    const QString &modelName = this->modelName;
-    QString command = "xsetwacom --set \"" + modelName + " Pen stylus\" Area ";
-    for (int item : values) {
-        command += QString::number(item) + " ";
+    QString newArea = "";
+    for (int i = 0; i < values.length() - 1; i++) {
+        newArea += QString::number(values[i]) + " ";
     }
-    const char *exCommand = command.toLocal8Bit().data();
-    qDebug() << command;
-    system(exCommand);
+    newArea += QString::number(values.last());
+    qDebug() << newArea << "\n";
+
+    cli->setField("Area", newArea);
 }
 
 QList<int> MainWindow::takeTextsFromWidgets(QList<QLineEdit *> lines)
@@ -52,44 +49,12 @@ QList<int> MainWindow::takeTextsFromWidgets(QList<QLineEdit *> lines)
     return values;
 }
 
-QStringList MainWindow::findDevices()
+int MainWindow::extractInteger(QLineEdit *line)
 {
-    QString programm = "xsetwacom";
-    QStringList args = QStringList() << "--list" << "devices";
-    QIODevice::OpenMode mode = QIODevice::ReadOnly;
-    QProcess process;
-    process.start(programm,args,mode);
-    process.waitForFinished();
-    QString out = process.readAllStandardOutput();
-    QStringList result = out.split("\n");
-    process.terminate();
-    return result;
+    return line->text().toInt();
 }
 
 void MainWindow::initModelName()
 {
-    QStringList devices = findDevices();
-    QString modelName;
-    for (const QString &device : devices) {
-        if (device.contains("type: STYLUS")) {
-            this->modelName = parseModelName(device);
-            ui->modelName->setText(this->modelName);
-            break;
-        }
-    }
+    ui->modelName->setText(cli->modelName);
 }
-
-QString MainWindow::parseModelName(QString device)
-{
-    QString result;
-    QStringList words = device.split(' ');
-    for (const QString &word : words) {
-        if (word == "Pen") {
-            result = result.left(result.length()-1);
-            break;
-        }
-        result += word + " ";
-    }
-    return result;
-}
-

@@ -4,6 +4,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "areapreview.h"
+#include "cliinteractor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,17 +18,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    QString modelName = "";
 
 public slots:
     void onButtonClicked();
 private:
     Ui::MainWindow *ui;
-    int extractInteger(QLineEdit *line);
-    void setArea(QList<int> values);
+    AreaPreview *areaPreview;
     QList<int> takeTextsFromWidgets(QList<QLineEdit *> lines);
-    QStringList findDevices();
+    CLIInteractor *cli = new CLIInteractor();
+    void setArea(QList<int> values);
+    int extractInteger(QLineEdit *line);
     void initModelName();
-    QString parseModelName(QString device);
 };
 #endif // MAINWINDOW_H
