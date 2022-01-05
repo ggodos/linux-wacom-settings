@@ -17,12 +17,6 @@ void CLIInteractor::setField(QString field, QString newValue)
     QStringList args = QStringList() << "--set" << commandModelName << " " << field << " " << newValue;
     QString setCommand = command + " --set " + commandModelName + " " + field + " " + newValue;
     system((const char *)(setCommand.toUtf8()));
-    //executeCommand(args, QIODevice::ReadOnly);
-}
-
-void CLIInteractor::makeCommandModelName()
-{
-    commandModelName = "\"" + modelName + " Pen stylus\"";
 }
 
 void CLIInteractor::initModelName()
@@ -31,7 +25,7 @@ void CLIInteractor::initModelName()
     for (const QString &device : devices) {
         if (device.contains("type: STYLUS")) {
             modelName = parseModelName(device);
-            makeCommandModelName();
+            commandModelName = "\"" + modelName + " Pen stylus\"";
             break;
         }
     }
